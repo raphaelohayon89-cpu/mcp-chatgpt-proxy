@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: mcp-chatgpt-proxy
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MCP_ACCESS_TOKEN
+        sync: false
+      - key: PUBLIC_PATH_SECRET
+        generateValue: true
+      - key: JUDILIBRE_UPSTREAM
+        value: https://mcp-legal-fr-judilibre.onrender.com/mcp
+      - key: DROIT_FRANCAIS_UPSTREAM
+        value: https://mcp-droit-francais-q6lk.onrender.com/mcp

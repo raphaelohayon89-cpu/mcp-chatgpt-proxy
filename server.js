@@ -1,10 +1,10 @@
 const PORT = process.env.PORT || 3000;
-const VERSION = "2026-06-16-token-normalized-v2";
+const VERSION = "2026-06-16-token-normalized-v3";
 
 const TOKEN = process.env.MCP_ACCESS_TOKEN;
 const PATH_SECRET = process.env.PUBLIC_PATH_SECRET;
 const NORMALIZED_PATH_SECRET = PATH_SECRET?.replace(/^\/+|\/+$/g, "");
-const AUTHORIZATION_VALUE = TOKEN?.trim().replace(/^Bearer\s+/i, "");
+const AUTHORIZATION_VALUE = TOKEN?.trim().replace(/^Bearer\s+/i, "").replace(/^['\"]|['\"]$/g, "").trim();
 
 const UPSTREAMS = {
   judilibre: process.env.JUDILIBRE_UPSTREAM || "https://mcp-legal-fr-judilibre.onrender.com/mcp",

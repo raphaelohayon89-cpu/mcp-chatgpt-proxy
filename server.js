@@ -3,13 +3,14 @@ const PORT = process.env.PORT || 3000;
 const TOKEN = process.env.MCP_ACCESS_TOKEN;
 const PATH_SECRET = process.env.PUBLIC_PATH_SECRET;
 const NORMALIZED_PATH_SECRET = PATH_SECRET?.replace(/^\/+|\/+$/g, "");
+const AUTHORIZATION_VALUE = TOKEN?.trim().replace(/^Bearer\s+/i, "");
 
 const UPSTREAMS = {
   judilibre: process.env.JUDILIBRE_UPSTREAM || "https://mcp-legal-fr-judilibre.onrender.com/mcp",
   droit: process.env.DROIT_FRANCAIS_UPSTREAM || "https://mcp-droit-francais-q6lk.onrender.com/mcp"
 };
 
-if (!TOKEN) {
+if (!AUTHORIZATION_VALUE) {
   throw new Error("Missing MCP_ACCESS_TOKEN environment variable");
 }
 
@@ -21,7 +22,7 @@ async function proxyRequest(request, upstreamUrl, search) {
   const target = new URL(upstreamUrl);
   target.search = search;
   const headers = new Headers(request.headers);
-  headers.set("authorization", `Bearer ${TOKEN}`);
+  headers.set("authorization", `Bearer ${AUTHORIZATION_VALUE}`);
   headers.delete("host");
   headers.delete("content-length");
 

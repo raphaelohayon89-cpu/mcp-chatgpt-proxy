@@ -2,6 +2,7 @@ const PORT = process.env.PORT || 3000;
 
 const TOKEN = process.env.MCP_ACCESS_TOKEN;
 const PATH_SECRET = process.env.PUBLIC_PATH_SECRET;
+const NORMALIZED_PATH_SECRET = PATH_SECRET?.replace(/^\/+|\/+$/g, "");
 
 const UPSTREAMS = {
   judilibre: process.env.JUDILIBRE_UPSTREAM || "https://mcp-legal-fr-judilibre.onrender.com/mcp",
@@ -12,7 +13,7 @@ if (!TOKEN) {
   throw new Error("Missing MCP_ACCESS_TOKEN environment variable");
 }
 
-if (!PATH_SECRET) {
+if (!NORMALIZED_PATH_SECRET) {
   throw new Error("Missing PUBLIC_PATH_SECRET environment variable");
 }
 
@@ -62,7 +63,9 @@ http.createServer(async (req, res) => {
     }
 
     const match = url.pathname.match(/^\/([^/]+)\/(judilibre|droit)\/mcp\/?$/);
-    if (!match || match[1] !== PATH_SECRET) {
+    const receivedSecret = match?.[1] ? decodeURIComponent(match[1]).replace(/^\/+|\/+$/g, "") : null;
+
+    if (!match || receivedSecret !== NORMALIZED_PATH_SECRET) {
       res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
       res.end("Not found");
       return;

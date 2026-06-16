@@ -1,4 +1,5 @@
 const PORT = process.env.PORT || 3000;
+const VERSION = "2026-06-16-token-normalized-v2";
 
 const TOKEN = process.env.MCP_ACCESS_TOKEN;
 const PATH_SECRET = process.env.PUBLIC_PATH_SECRET;
@@ -57,7 +58,7 @@ http.createServer(async (req, res) => {
     const url = new URL(req.url || "/", origin);
 
     if (url.pathname === "/health") {
-      const body = JSON.stringify({ ok: true });
+      const body = JSON.stringify({ ok: true, version: VERSION });
       res.writeHead(200, { "content-type": "application/json" });
       res.end(body);
       return;
@@ -99,5 +100,5 @@ http.createServer(async (req, res) => {
     res.end(error instanceof Error ? error.message : "Proxy error");
   }
 }).listen(PORT, () => {
-  console.log(`MCP proxy listening on ${PORT}`);
+  console.log(`MCP proxy ${VERSION} listening on ${PORT}`);
 });
